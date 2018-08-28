@@ -69,7 +69,7 @@ namespace DatabaseInstaller
             progressBar.Maximum = filePaths.Length;
             progressBar.Value = 0;
             progressBar.Step = 1;
-            foreach (String fileName in filePaths)
+            foreach (string fileName in filePaths)
             {
                 try
                 {
