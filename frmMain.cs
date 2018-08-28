@@ -79,9 +79,12 @@ namespace DatabaseInstaller
                 }
                 catch (MySqlException ex)
                 {
-                    con.Close();
                     MessageBox.Show(ex.Message, MSG_WARNING);
                     btnInstall.Enabled = true;
+                    if (con != null)
+                    {
+                        con.Close();
+                    }
                     return;
                 }
             }
