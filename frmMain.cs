@@ -35,71 +35,43 @@ namespace DatabaseInstaller
                 return;
             }
 
-            // Create database if it does not exist.
-            con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
             try
             {
+                // Create database if it does not exist.
+                con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
                 con.Open();
                 cmd = new MySqlCommand("CREATE DATABASE IF NOT EXISTS `" + txtDbName.Text + "`;", con);
                 cmd.ExecuteNonQuery();
                 con.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, MSG_WARNING);
-                btnInstall.Enabled = true;
-                return;
-            }
 
-            // Connect to database.
-            con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";database=" + txtDbName.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
-            try
-            {
+                // Connect to database.
+                con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";database=" + txtDbName.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
                 con.Open();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, MSG_WARNING);
-                btnInstall.Enabled = true;
-                return;
-            }
 
-            // Process sql files.
-            filePaths = Directory.GetFiles(SQL_PATH, "*.sql", SearchOption.AllDirectories);
-            progressBar.Maximum = filePaths.Length;
-            progressBar.Value = 0;
-            progressBar.Step = 1;
-            foreach (string fileName in filePaths)
-            {
-                // Execute sql file.
-                try
+                // Process sql files.
+                filePaths = Directory.GetFiles(SQL_PATH, "*.sql", SearchOption.AllDirectories);
+                progressBar.Maximum = filePaths.Length;
+                progressBar.Value = 0;
+                progressBar.Step = 1;
+                foreach (string fileName in filePaths)
                 {
                     cmd = new MySqlCommand(File.ReadAllText(fileName), con);
                     cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, MSG_WARNING);
-                    btnInstall.Enabled = true;
-                    if (con != null)
-                    {
-                        con.Close();
-                    }
-                    return;
+                    progressBar.PerformStep();
                 }
 
-                // Increase progress bar value.
-                progressBar.PerformStep();
-            }
-
-            // Close the connection.
-            try
-            {
+                // Close the connection.
                 con.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, MSG_WARNING);
+                btnInstall.Enabled = true;
+                if (con != null)
+                {
+                    con.Close();
+                }
+                return;
             }
 
             // Re-enable install button.
