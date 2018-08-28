@@ -57,7 +57,7 @@ namespace DatabaseInstaller
             {
                 con.Open();
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, MSG_WARNING);
                 btnInstall.Enabled = true;
@@ -77,7 +77,7 @@ namespace DatabaseInstaller
                     cmd.ExecuteNonQuery();
                     progressBar.PerformStep();
                 }
-                catch (MySqlException ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, MSG_WARNING);
                     btnInstall.Enabled = true;
@@ -94,7 +94,7 @@ namespace DatabaseInstaller
             {
                 con.Close();
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, MSG_WARNING);
             }
