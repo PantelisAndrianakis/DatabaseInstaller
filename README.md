@@ -1,4 +1,4 @@
-# MySQL Database Installer
+# MySQL file Database Installer
 One click install for multiple SQL files.<br>
 Just put your files in the sql sub-directory and click the install button.
 
