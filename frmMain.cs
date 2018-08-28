@@ -10,6 +10,10 @@ namespace DatabaseInstaller
 {
     public partial class frmMain : Form
     {
+        private MySqlConnection con;
+        private MySqlCommand cmd;
+        private string[] filePaths;
+        private string SQL_PATH = "sql";
         private string MSG_WARNING = "Warning";
         private string MSG_SUCCESS = "Success";
 
@@ -24,7 +28,7 @@ namespace DatabaseInstaller
             btnInstall.Enabled = false;
 
             // Check if sql directory exists.
-            if (!Directory.Exists("sql"))
+            if (!Directory.Exists(SQL_PATH))
             {
                 MessageBox.Show("Could not access sql directory.", MSG_WARNING);
                 btnInstall.Enabled = true;
@@ -32,13 +36,11 @@ namespace DatabaseInstaller
             }
 
             // Create database if it does not exist.
-            string createCommand = "CREATE DATABASE IF NOT EXISTS `" + txtDbName.Text + "`;";
-            MySqlConnection con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
-            MySqlCommand cmd;
+            con = new MySqlConnection("server=" + txtAddress.Text + ";port=" + txtPort.Text + ";user=" + txtUser.Text + ";password=" + txtPassword.Text + ";SslMode=none;");
             try
             {
                 con.Open();
-                cmd = new MySqlCommand(createCommand, con);
+                cmd = new MySqlCommand("CREATE DATABASE IF NOT EXISTS `" + txtDbName.Text + "`;", con);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
@@ -63,7 +65,7 @@ namespace DatabaseInstaller
             }
 
             // Process sql files.
-            string[] filePaths = Directory.GetFiles("sql", "*.sql", SearchOption.AllDirectories);
+            filePaths = Directory.GetFiles(SQL_PATH, "*.sql", SearchOption.AllDirectories);
             progressBar.Maximum = filePaths.Length;
             progressBar.Value = 0;
             progressBar.Step = 1;
