@@ -71,11 +71,11 @@ namespace DatabaseInstaller
             progressBar.Step = 1;
             foreach (string fileName in filePaths)
             {
+                // Execute sql file.
                 try
                 {
                     cmd = new MySqlCommand(File.ReadAllText(fileName), con);
                     cmd.ExecuteNonQuery();
-                    progressBar.PerformStep();
                 }
                 catch (Exception ex)
                 {
@@ -87,6 +87,9 @@ namespace DatabaseInstaller
                     }
                     return;
                 }
+
+                // Increase progress bar value.
+                progressBar.PerformStep();
             }
 
             // Close the connection.
